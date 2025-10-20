@@ -1,26 +1,35 @@
 import Head from 'next/head';
+import Navbar from '../components/Navbar';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+import ChatInvite from '@/components/ChatInvite';
 
 export default function Home() {
   return (
     <>
     <div className='body'>
+      <Navbar />
       <Head>
         <title>Orbit OS - Marketing Automation & AI Agency</title>
         <meta name="description" content="Space-themed marketing automation and AI agency landing page." />
       </Head>
       <div className="space-bg">
-        <div className="stars"></div>
-        <div className="stars2"></div>
-        <div className="stars3"></div>
+        <div className="stars "></div>
+        <div className="stars2 "></div>
+        <div className="stars3 "></div>
         {/* Animated planet */}
-        <div className="planet"></div>
+        <div className="planet hover:scale-110 transition-transform duration-300 "></div>
         {/* Animated orbiting satellite */}
-        <div className="satellite-orbit">
-          <div className="satellite"></div>
+        <div className="satellite-orbit hover:scale-110 transition-transform duration-300">
+          <div className="satellite "></div>
         </div>
-        <main className="hero">
-          <h1>Orbit OS</h1>
-          <h2>Marketing Automation & AI Agency</h2>
+        <main className="hero relative z-10">
+        <DotLottieReact className='h-100  mt-4 hover:scale-110 transition-transform duration-300'
+      src="https://lottie.host/75fa6518-27da-4af7-80bb-da49598429d1/z6DGYRrnWh.lottie"
+      loop
+      autoplay
+    />
+    <ChatInvite />
+          <h2 className='gradient-text'>Marketing Automation & AI Agency</h2>
           <p>
             Launch your brand into orbit with cutting-edge automation and AI solutions.<br />
             We help you reach new heights in digital marketing.
@@ -58,17 +67,38 @@ export default function Home() {
           color: #ffffff;
           
         }
+          .gradient-text {
+    font-size: 60px;
+    font-weight: bold;
+    background: linear-gradient(90deg, 
+      #3B00A0 0%, 
+      #3E019E 10%, 
+      #480599 18%, 
+      #590B90 25%, 
+      #711483 32%, 
+      #902073 39%, 
+      #B525EF 45%, 
+      #E23F48 51%, 
+      #FFA439 55%, 
+      #FF7828 67%, 
+      #FFEE00 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+  }
         h2 {
-          font-size: 3rem;
+          font-size: 2rem;
           font-weight: 500;
-          margin-bottom: 2rem;
+          margin-bottom: 1rem;
           background: #833AB4;
 background: linear-gradient(90deg,rgba(131, 58, 180, 1) 0%, rgba(253, 29, 29, 1) 50%, rgba(252, 176, 69, 1) 100%);
           
         }
         p {
           font-size: 1.75rem;
-          margin-bottom: 2.5rem;
+          margin-bottom: 2rem;
           color: white;
         }
         .cta-btn {
