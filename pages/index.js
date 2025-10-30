@@ -28,7 +28,7 @@ export default function Home() {
       loop
       autoplay
     />
-    <Chat Invite />
+    <ChatInvite />
           <h2 className='gradient-text'>Marketing Automation & AI Agency</h2>
           <p>
             Launch your brand into orbit with cutting-edge automation and AI solutions.<br />

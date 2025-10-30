@@ -2,46 +2,45 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { GoogleGenerativeAI } from '@google/generative-ai'
-import { Clock } from 'lucide-react'
+import { Send, Settings2, X } from 'lucide-react'
 
-export default function NitroChat() {
-  const [messages, setMessages] = useState([])
+export default function GeminiChat() {
   const [input, setInput] = useState('')
+  const [messages, setMessages] = useState([])
   const [loading, setLoading] = useState(false)
+  const [showSettings, setShowSettings] = useState(false)
+  const [aiConfig, setAiConfig] = useState({
+    name: 'Nitro AI',
+    tone: 'friendly and helpful',
+    style:
+      'clear, simple, and human-like HTML with headings, subheadings, bold, italic, and paragraph. Use white for headings, off-white for paragraphs, and orange for highlights. Avoid JS, only inline CSS.',
+    role:
+      'AI Marketing Expert Assistant. Must reply in pure HTML format with inline styling that can be rendered inside the chat.',
+  })
+
   const chatEndRef = useRef(null)
 
-  const aiConfig = {
-    name: 'Nitro AI',
-    gole:"gole is to provide best marketing plane to user",
-    tone: 'friendly',
-    goal:
-      'Generate a complete HTML + TailwindCSS ui not websit its a ui of the plane text must be white or light color  (with inline JS if needed) that visually explains the user’s request like a modern landing page. Must be visually rich and self-contained. Avoid external assets except TailwindCDN.',
-    example:
-      'If asked "explain marketing strategy", return a mini webpage with headings, colored sections, icons, and step cards explaining the process.',
-    rules: `
-      - Use valid HTML5.
-      - Use TailwindCSS via CDN in <head>.
-      - Use inline <script> if logic is needed.
-      - No markdown or JSX.
-      - Make it modern, full-screen responsive.
-      - Include emojis and color variations.
-      - dont use any image tags.
-      - if you use cta cta must link to /meetingscheduling
-      - text color must be in shades of white  Very important 
-      - background color must be in shades of dark colors
-      -headings must be in shades of cyan or blue text-amber-50
-      - dont creat any navigacation bars or footers
-    `,
-  }
-
+  // 🧠 Load previous chat from sessionStorage on mount
   useEffect(() => {
+    const saved = sessionStorage.getItem('nitro_chat_history')
+    if (saved) setMessages(JSON.parse(saved))
+  }, [])
+
+  // 💾 Save chat to sessionStorage whenever it changes
+  useEffect(() => {
+    if (messages.length > 0) {
+      sessionStorage.setItem('nitro_chat_history', JSON.stringify(messages))
+    }
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
+  // ✉️ Handle sending message
   const handleSend = async () => {
-    if (!input.trim()) return
+    if (!input.trim() || loading) return
+
     const userMessage = { role: 'user', text: input }
-    setMessages((prev) => [...prev, userMessage])
+    const newMessages = [...messages, userMessage]
+    setMessages(newMessages)
     setInput('')
     setLoading(true)
 
@@ -50,7 +49,7 @@ export default function NitroChat() {
       if (!apiKey) {
         setMessages((prev) => [
           ...prev,
-          { role: 'ai', html: '<p>⚠️ Missing Gemini API Key.</p>' },
+          { role: 'ai', html: '<p style="color:red;">⚠️ Missing Gemini API key.</p>' },
         ])
         setLoading(false)
         return
@@ -59,17 +58,20 @@ export default function NitroChat() {
       const genAI = new GoogleGenerativeAI(apiKey)
       const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' })
 
+      // 🧩 Build conversation context for continuity
+      const history = newMessages
+        .map((m) => `${m.role === 'user' ? 'User' : 'AI'}: ${m.text || m.html}`)
+        .join('\n')
+
       const prompt = `
-You are ${aiConfig.name}.
-${aiConfig.goal}
+You are ${aiConfig.name}, a ${aiConfig.role}.
+Tone: ${aiConfig.tone}.
+Style: ${aiConfig.style}.
+This is the ongoing conversation so far:
+${history}
 
-Strict rules:
-${aiConfig.rules}
-
-User request:
-"${input}"
-
-Output only the HTML code of the generated webpage.
+Now respond in pure HTML only (no markdown, no code blocks).
+User: "${input}"
       `
 
       const result = await model.generateContent(prompt)
@@ -77,11 +79,11 @@ Output only the HTML code of the generated webpage.
       html = html.replace(/```html|```/g, '').trim()
 
       setMessages((prev) => [...prev, { role: 'ai', html }])
-    } catch (err) {
-      console.error(err)
+    } catch (error) {
+      console.error(error)
       setMessages((prev) => [
         ...prev,
-        { role: 'ai', html: '<p>⚠️ Error: Unable to connect to Gemini.</p>' },
+        { role: 'ai', html: '<p style="color:red;">⚠️ Error connecting to Gemini.</p>' },
       ])
     } finally {
       setLoading(false)
@@ -92,81 +94,127 @@ Output only the HTML code of the generated webpage.
     if (e.key === 'Enter' && !loading) handleSend()
   }
 
+  // ⚙️ Handle AI Config JSON input
+  const handleConfigChange = (e) => {
+    try {
+      const updated = JSON.parse(e.target.value)
+      setAiConfig(updated)
+    } catch {
+      // ignore invalid JSON while typing
+    }
+  }
+
+  // 🧹 Clear chat
+  const handleClearChat = () => {
+    setMessages([])
+    sessionStorage.removeItem('nitro_chat_history')
+  }
+
   return (
-    <div className="bg-black text-gray-100 min-h-screen min-w-screen pl-40 pr-40 pb-10 flex flex-col">
-      {/* HEADER */}
-      <header className="py-4 px-6 text-center text-cyan-400 font-semibold text-lg border-b border-cyan-900/40 shadow-[0_0_15px_#00ffff44] sticky top-0 z-10 bg-[#0a0a15]/90 backdrop-blur-lg">
-        ⚡ Nitro AI — you ai power marketing co-pilot
+    <div className="h-screen w-screen bg-[#131314] text-white flex flex-col justify-between">
+      {/* Header */}
+      <header className="px-8 py-4 flex justify-between items-center text-gray-300 border-b border-[#1E1F20]">
+        <h1 className="text-xl font-semibold">
+          nitro<span className="text-blue-400">AI</span>
+        </h1>
+        <div className="flex items-center space-x-4">
+          <button
+            onClick={handleClearChat}
+            className="text-sm text-gray-400 hover:text-red-400 transition"
+          >
+            Clear Chat
+          </button>
+          <button
+            onClick={() => setShowSettings(!showSettings)}
+            className="hover:text-blue-400 transition"
+          >
+            <Settings2 size={22} />
+          </button>
+        </div>
       </header>
 
-      {/* CHAT AREA */}
-      <main className="flex-1 overflow-y-auto p-6 space-y-6">
-        {messages.map((msg, i) => (
-          <div
-            key={i}
-            className={`flex ${
-              msg.role === 'user' ? 'justify-end' : 'justify-start'
-            }`}
-          >
-            <div
-              className={`w-full rounded-2xl overflow-hidden ${
-                msg.role === 'user'
-                  ? 'bg-cyan-500/90 text-black p-4'
-                  : 'bg-[#0d0d20]/90 border border-cyan-800/40'
-              }`}
+      {/* Settings Panel */}
+      {showSettings && (
+        <div className="absolute top-16 right-6 bg-[#1E1F20] border border-gray-700 p-4 rounded-2xl w-96 z-50 shadow-xl">
+          <div className="flex justify-between items-center mb-2">
+            <h2 className="text-lg font-medium text-gray-200">AI Configuration (JSON)</h2>
+            <button
+              onClick={() => setShowSettings(false)}
+              className="text-gray-400 hover:text-red-400"
             >
-              {msg.role === 'ai' ? (
-                <iframe
-                  sandbox="allow-scripts allow-same-origin"
-                  srcDoc={msg.html}
-                  className="w-full h-[80vh] rounded-xl border-0 bg-gray-900 text-amber-50"
-                ></iframe>
-              ) : (
-                <p className="p-3">{msg.text}</p>
-              )}
-            </div>
+              <X size={20} />
+            </button>
+          </div>
+          <textarea
+            defaultValue={JSON.stringify(aiConfig, null, 2)}
+            onChange={handleConfigChange}
+            className="w-full h-48 bg-black text-gray-200 font-mono text-sm rounded-lg p-2 border border-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-400"
+          ></textarea>
+          <p className="text-gray-500 text-xs mt-1">
+            Edit and save JSON to customize AI’s tone and response format.
+          </p>
+        </div>
+      )}
 
-            {/* {msg.role === 'ai' && (
-              <div className="hidden md:flex items-center ml-4 text-gray-300 hover:text-teal-400 cursor-pointer bg-amber-500  text-sm">
-                <Clock className="mr-1" /> Schedule a meeting
+      {/* Chat Section */}
+      <main className="flex-1 overflow-y-auto px-8 py-6 space-y-6 scrollbar-hide">
+        {messages.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-full text-center space-y-3">
+            <h1 className="text-4xl font-light text-gray-200">Hello, Mukti 👋</h1>
+            <p className="text-lg text-gray-500">
+              Ask me anything about marketing or edit AI settings ⚙️
+            </p>
+          </div>
+        ) : (
+          messages.map((msg, i) => (
+            <div
+              key={i}
+              className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+            >
+              <div
+                className={`max-w-[75%] p-4 rounded-2xl ${
+                  msg.role === 'user'
+                    ? 'bg-blue-500 text-black'
+                    : 'bg-[#1E1F20] border border-gray-700 text-gray-100'
+                }`}
+              >
+                {msg.role === 'ai' ? (
+                  <div
+                    dangerouslySetInnerHTML={{ __html: msg.html }}
+                    className="prose prose-invert max-w-none"
+                  ></div>
+                ) : (
+                  <p>{msg.text}</p>
+                )}
               </div>
-            )} */}
-          </div>
-        ))}
-
-        {loading && (
-          <div className="p-3 rounded-2xl bg-[#151528]/80 border border-cyan-800/40 text-gray-400 text-sm animate-pulse">
-            Getting your perfect marketing plane ready...
-          </div>
+            </div>
+          ))
         )}
-
+        {loading && <p className="text-gray-400 text-sm animate-pulse">Thinking...</p>}
         <div ref={chatEndRef} />
       </main>
 
-      {/* INPUT BAR */}
-      <footer className="p-4 border-t border-cyan-900/40 bg-[#0b0b15]/80 backdrop-blur-md sticky bottom-0">
-        <div className="flex items-center gap-3">
+      {/* Input Bar */}
+      <footer className="px-6 pb-6 flex flex-col items-center">
+        <div className="relative w-full max-w-3xl">
           <input
             type="text"
-            className="flex-1 bg-[#141428] border border-cyan-900/40 text-gray-100 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-cyan-500 placeholder-gray-500"
-            placeholder="Ask Nitro AI to design a webpage explaining your idea..."
+            placeholder="Ask anything..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyPress}
             disabled={loading}
+            className="w-full bg-[#1E1F20] text-white placeholder-gray-400 rounded-full py-4 px-6 pr-16 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
             onClick={handleSend}
             disabled={loading}
-            className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-              loading
-                ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
-                : 'bg-gradient-to-r from-cyan-400 to-blue-500 text-black hover:from-blue-500 hover:to-cyan-400 shadow-[0_0_15px_#00ffffaa]'
-            }`}
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-blue-500 hover:bg-blue-400 text-black p-2 rounded-full transition"
           >
-            {loading ? '...' : 'Generate'}
+            <Send size={18} />
           </button>
         </div>
+        <p className="text-gray-500 text-xs mt-3">Powered by Gemini 2.0 Flash</p>
       </footer>
     </div>
   )
