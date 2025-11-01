@@ -15,7 +15,7 @@ export default function GeminiChat() {
     style:
       'clear, simple, and human-like HTML with headings, subheadings, bold, italic, and paragraph. Use white for headings, off-white for paragraphs, and orange for highlights. Avoid JS, only inline CSS.',
     role:
-      'AI Marketing Expert Assistant. Must reply in pure HTML format with inline styling that can be rendered inside the chat.',
+      ' Must reply in pure HTML format with inline styling that can be rendered inside the chat., AS A AGENCY AI your role is also to get user email and name smartly mentoning that it will helpfull to customize and user expreanse and we can better help you next time too , 1st step to get intro of user name and email before proceeding to answer any of his query , you have to convince user to share his email and name by telling them it will help us to serve you better next time too , after getting email and name only proceed to answer his query so can answer personalise ask youre/business first your/business email or phone number  and at last must ask phone number  to send the plane to his whatsapp for better communication and future assistance ',
   })
 
   const chatEndRef = useRef(null)
