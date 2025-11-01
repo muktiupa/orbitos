@@ -214,7 +214,7 @@ User: "${input}"
             <Send size={18} />
           </button>
         </div>
-        <p className="text-gray-500 text-xs mt-3">Powered by Gemini 2.0 Flash</p>
+        <p className="text-gray-500 text-xs mt-3">Powered by OrbitOS Nitro v01.00 </p>
       </footer>
     </div>
   )
