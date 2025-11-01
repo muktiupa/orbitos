@@ -2,6 +2,8 @@ import Head from 'next/head';
 import Navbar from '../components/Navbar';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import ChatInvite from '@/components/ChatInvite';
+import WhatWeDo from '@/components/WhatWeDo';
+
 
 export default function Home() {
   return (
@@ -38,6 +40,7 @@ export default function Home() {
         </main>
       </div>
       </div>
+      <WhatWeDo />
       <style jsx>{`
       .body {
   min-height: 100vh;
