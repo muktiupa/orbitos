@@ -3,6 +3,8 @@ import Navbar from '../components/Navbar';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import ChatInvite from '@/components/ChatInvite';
 import WhatWeDo from '@/components/WhatWeDo';
+import HowItWorks from "@/components/HowItWorks";
+import AboutTeam from "@/components/AboutTeam";
 
 
 export default function Home() {
@@ -41,6 +43,9 @@ export default function Home() {
       </div>
       </div>
       <WhatWeDo />
+      <HowItWorks />
+      <AboutTeam />
+
       <style jsx>{`
       .body {
   min-height: 100vh;
