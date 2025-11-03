@@ -10,9 +10,14 @@ export default function ChatInvite() {
         </p>
 </div>
 
-      <Link href="/chatNitroAi" className="w-full flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-xl transition-all hover:scale-110 transition-transform duration-300">
+      <Link href="/chatNitroAi" className="w-full flex items-center justify-center space-x-2  bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-xl transition-all hover:scale-110 transition-transform duration-300">
         <MessageCircle size={18} />
-        <span className="font-medium">Let’s chat!</span>
+        <span className="font-medium ">Let’s chat!</span>
+      </Link>
+
+      <Link href="/grumpy" className="w-full flex items-center justify-center space-x-2  mt-3.5 bg-amber-50 hover:bg-amber-200 text-gray-800 py-2.5 rounded-xl transition-all hover:scale-110 transition-transform duration-300">
+        <MessageCircle size={18} />
+        <span className="font-medium"> Talk to Grumpy</span>
       </Link>
 
       {/* Inline CSS animation */}

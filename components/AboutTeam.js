@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { ImageDownIcon } from "lucide-react";
 
 const team = [
   {
@@ -9,7 +10,7 @@ const team = [
     role: "The Growth Architect",
     description:
       "He doesn’t just run campaigns — he engineers performance ecosystems. With data, AI, and creativity in sync, Manas designs growth that compounds.",
-    image: "/assets/Manas.png",
+    image: "/assets/manas.png",
     gradient: "from-[#4B0082] to-[#2E0854]",
   },
   {
@@ -74,12 +75,14 @@ export default function AboutTeam() {
             </div>
 
             {/* Image slightly outside the card */}
-            <div className="relative mt-6 md:mt-0 md:-mr-8 flex-shrink-0 w-36 h-48 md:w-44 md:h-56">
+            <div className="relative mt-6 md:mt-0 md:-mr-8 flex-shrink-0 w-36 h-30 md:w-44 md:h-30">
               <Image
                 src={person.image}
                 alt={person.name}
-                fill
-                className="object-contain drop-shadow-[0_0_35px_rgba(255,255,255,0.25)] translate-y-[-20px]"
+                width={250}
+                height={350}
+                className="object-contain drop-shadow-[0_0_35px_rgba(255,255,255,0.25)]"
+                style={{ transform: "translate(25px, -85px)" }}
               />
             </div>
           </motion.div>
