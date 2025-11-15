@@ -1,4 +1,4 @@
-import NitroAI from "@/components/nitroAI"
+import NitroAI from "@/components/NitroAI"
 
 export default function chatNitroAi() {
   return (
